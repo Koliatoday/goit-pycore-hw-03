@@ -21,7 +21,7 @@ def get_days_from_today(date: str) -> int:
     print("Wrong data format")
     return None
   else:
-    days_diff = date_obj - datetime.now()
+    days_diff = date_obj.date() - datetime.now().date()
 
     return -days_diff.days
 
@@ -43,7 +43,7 @@ def get_numbers_ticket(min: int, max: int, quantity: int) -> list:
   Returns:
     list: A sorted list of unique random numbers within the specified range.
   """
-  if min not in range(1,1000) or max not in range(1,1000) or quantity <= 0:
+  if min not in range(1,1000) or max not in range(1,1000) or quantity <= 0 or (max < min) or (max - min) < quantity:
     return []
 
   s = set()
@@ -75,7 +75,7 @@ def normalize_phone(phone_number: str) -> str:
 
   norm_number = re.sub(pattern, replacement, phone_number)
   if norm_number[0] != "+":
-    if norm_number[1:3] != "38":
+    if norm_number[0:2] != "38":
       norm_number = "+38" + norm_number
     else:
       norm_number = "+" + norm_number
@@ -144,7 +144,7 @@ def get_upcoming_birthdays(users: list) -> list:
     diff = user_date_obj - today_obj
     diff_ny = user_date_ny_obj - today_obj
 
-    if diff.days > 0 and diff.days <= 6:
+    if diff.days >= 0 and diff.days <= 6:
         day = check_holiday(user_date_obj, diff.days)
         if day:
             ret.append({"name":users[i]["name"], 'congratulation_date':day})
